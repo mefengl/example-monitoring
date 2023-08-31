@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  prometheus:
+    image: prom/prometheus:latest
+    command:
+      - --storage.tsdb.retention.time=7d
+      - --config.file=/etc/prometheus/prometheus.yml
+      # - --storage.tsdb.retention.size=10GB
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
+
+  node_exporter_1:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+
+  node_exporter_2: 
+    image: prom/node-exporter:latest
+    ports:
+      - "9101:9100"
